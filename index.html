@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ScholarSync Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+
+<!-- 🔐 LOGIN CHECK -->
+<script>
+if (localStorage.getItem("login") !== "true") {
+    window.location.href = "login.html";
+}
+</script>
+
+<div class="sidebar">
+    <h2>ScholarSync</h2>
+
+    <button onclick="toggleTheme()">Toggle Theme</button>
+    <button onclick="logout()">Logout</button>
+</div>
+
+<div class="main">
+
+    <h1>Student Dashboard</h1>
+
+    <!-- DASHBOARD -->
+    <div class="dashboard">
+        <div class="box">
+            <h2 id="totalStudents">0</h2>
+            <p>Total Students</p>
+        </div>
+    </div>
+
+    <!-- SEARCH -->
+    <input type="text" id="searchInput"
+           placeholder="Search students..."
+           onkeyup="searchStudents()">
+
+    <!-- FORM -->
+    <div class="container">
+        <input type="text" id="name" placeholder="Name">
+        <input type="email" id="email" placeholder="Email">
+        <input type="text" id="course" placeholder="Course">
+
+        <button onclick="addStudent()">Add Student</button>
+    </div>
+
+    <!-- CHART -->
+    <canvas id="courseChart"></canvas>
+
+    <!-- LIST -->
+    <div id="studentList"></div>
+    <div id="pagination"></div>
+
+</div>
+
+<script src="script.js"></script>
+
+<div id="editModal" class="modal">
+
+    <div class="modal-content">
+
+        <h2>Edit Student</h2>
+
+        <input type="hidden" id="editId">
+
+        <input type="text" id="editName" placeholder="Name">
+        <input type="email" id="editEmail" placeholder="Email">
+        <input type="text" id="editCourse" placeholder="Course">
+
+        <button onclick="updateStudent()">Update</button>
+        <button onclick="closeModal()">Cancel</button>
+
+    </div>
+
+</div>
+
+</body>
+</html>

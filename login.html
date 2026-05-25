@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ScholarSync Login</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="login-body">
+
+<div class="login-wrapper">
+
+    <!-- LEFT IMAGE -->
+    <div class="login-left">
+        <img src="assets/login.svg" alt="Login Image">
+    </div>
+
+    <!-- RIGHT FORM -->
+    <div class="login-right">
+
+        <h1>ScholarSync</h1>
+        <p>Admin Login Portal</p>
+
+        <input type="text" id="username" placeholder="Username">
+        <input type="password" id="password" placeholder="Password">
+
+        <button onclick="login()">Login</button>
+
+        <p id="msg"></p>
+
+    </div>
+
+</div>
+
+
+<script>
+function login() {
+
+    let username = document.getElementById("username").value;
+    let password = document.getElementById("password").value;
+
+    fetch("login.php", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body: "username=" + encodeURIComponent(username) +
+              "&password=" + encodeURIComponent(password)
+    })
+    .then(res => res.text())
+    .then(data => {
+
+        console.log("SERVER RESPONSE:", data);
+
+        if (data.trim() === "success") {
+
+            // ✅ IMPORTANT: this fixes your redirect issue
+            localStorage.setItem("login", "true");
+
+            document.getElementById("msg").style.color = "green";
+            document.getElementById("msg").innerText = "Login successful... Redirecting...";
+
+            setTimeout(() => {
+                window.location.href = "./index.html";
+            }, 800);
+
+        } else {
+            document.getElementById("msg").style.color = "red";
+            document.getElementById("msg").innerText = "Invalid credentials";
+        }
+    });
+}
+</script>
+</script>
+</body>
+</html>
