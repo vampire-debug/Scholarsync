@@ -1,16 +1,25 @@
 <?php
-include "db.php";
+
+include 'db.php';
 
 $id = $_POST['id'];
+$usn = $_POST['usn'];
 $name = $_POST['name'];
 $email = $_POST['email'];
 $course = $_POST['course'];
 
 $sql = "UPDATE students 
-        SET name='$name', email='$email', course='$course' 
-        WHERE id=$id";
+SET 
+    usn='$usn',
+    name='$name',
+    email='$email',
+    course='$course'
+WHERE id='$id'";
 
-$conn->query($sql);
+if ($conn->query($sql) === TRUE) {
+    echo "success";
+} else {
+    echo "error";
+}
 
-echo "updated";
 ?>

@@ -30,18 +30,25 @@ function logout() {
     localStorage.removeItem("login");
     window.location.href = "login.html";
 }
-
-// ================= ADD STUDENT =================
+// add student........//
 function addStudent() {
 
+    let usn = document.getElementById("usn").value;
     let name = document.getElementById("name").value;
     let email = document.getElementById("email").value;
     let course = document.getElementById("course").value;
 
     fetch("insert.php", {
         method: "POST",
-        headers: {"Content-Type": "application/x-www-form-urlencoded"},
-        body: `name=${name}&email=${email}&course=${course}`
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body: new URLSearchParams({
+    usn: usn,
+    name: name,
+    email: email,
+    course: course
+})
     })
     .then(() => {
         loadStudents(currentPage);
@@ -73,6 +80,7 @@ function searchStudents() {
     .then(data => {
 
         let filtered = data.filter(s =>
+            s.usn.toLowerCase().includes(input) ||
             s.name.toLowerCase().includes(input) ||
             s.email.toLowerCase().includes(input) ||
             s.course.toLowerCase().includes(input)
@@ -87,23 +95,29 @@ function render(data) {
     let html = "";
 
     data.forEach(s => {
+
         html += `
         <div class="card">
+
             <div>
                 <h3>${s.name}</h3>
+                <p><b>USN:</b> ${s.usn}</p>
                 <p>${s.email}</p>
                 <p>${s.course}</p>
             </div>
 
             <div>
-                <button onclick="openEdit(${s.id}, '${s.name}', '${s.email}', '${s.course}')">
+
+                <button onclick="openEdit(${s.id}, '${s.usn}', '${s.name}', '${s.email}', '${s.course}')">
                     Edit
                 </button>
 
                 <button onclick="deleteStudent(${s.id})">
                     Delete
                 </button>
+
             </div>
+
         </div>
         `;
     });
@@ -112,10 +126,10 @@ function render(data) {
 }
 
 
-// OPEN POPUP
-function openEdit(id, name, email, course) {
+function openEdit(id, usn, name, email, course) {
 
     document.getElementById("editId").value = id;
+    document.getElementById("editUsn").value = usn;
     document.getElementById("editName").value = name;
     document.getElementById("editEmail").value = email;
     document.getElementById("editCourse").value = course;
@@ -132,14 +146,17 @@ function closeModal() {
 function updateStudent() {
 
     let id = document.getElementById("editId").value;
+    let usn = document.getElementById("editUsn").value;
     let name = document.getElementById("editName").value;
     let email = document.getElementById("editEmail").value;
     let course = document.getElementById("editCourse").value;
 
     fetch("update.php", {
         method: "POST",
-        headers: {"Content-Type": "application/x-www-form-urlencoded"},
-        body: `id=${id}&name=${name}&email=${email}&course=${course}`
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body: `id=${id}&usn=${usn}&name=${name}&email=${email}&course=${course}`
     })
     .then(() => {
         closeModal();
@@ -229,6 +246,7 @@ function loadPagination() {
 
 // ================= CLEAR INPUTS =================
 function clearInputs() {
+    document.getElementById("usn").value = "";
     document.getElementById("name").value = "";
     document.getElementById("email").value = "";
     document.getElementById("course").value = "";
